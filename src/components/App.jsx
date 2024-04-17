@@ -4,17 +4,20 @@ import { ContactsList } from './ContactsList/ContactsList';
 import { AddContacts } from './AddContacts/AddContacts';
 import { Filter } from './Filter/Filter';
 import css from './App.module.css';
+import { useDispatch, useSelector } from 'react-redux';
+import { addContact, deleteContact, filtering } from '../redux/actions';
 
 export function App() {
-  const [contacts, setContacts] = useState([
-    { id: 'id-1', name: 'Rosie Simpson', number: '459-12-56' },
-    { id: 'id-2', name: 'Hermione Kline', number: '443-89-12' },
-    { id: 'id-3', name: 'Eden Clements', number: '645-17-79' },
-    { id: 'id-4', name: 'Annie Copeland', number: '227-91-26' },
-  ]);
-  const [filter, setFilter] = useState('');
+  const dispatch = useDispatch();
+
+  const contacts = useSelector(state => state.contacts);
+  const filtered = useSelector(state => state.filtered);
+
+  console.log(filtered);
+
   const [name, setName] = useState('');
   const [number, setNumber] = useState('');
+  const [loading, setLoading] = useState(true);
 
   const handleChange = eve => {
     const { name, value } = eve.target;
@@ -25,7 +28,8 @@ export function App() {
       setNumber(value);
     }
     if (name === 'filter') {
-      setFilter(value);
+      console.log('Filtering action is being dispatched with value:', value);
+      dispatch(filtering(value));
     }
   };
 
@@ -36,55 +40,48 @@ export function App() {
       name,
       number,
     };
-    const prevState = contacts;
 
-    const existingContact = prevState.some(prev =>
-      prev.name.toLowerCase().includes(name.toLowerCase())
-    );
+    const existingContact = contacts.some(prev => prev.name.includes(name));
     if (existingContact) {
       alert('Contact is already existing');
     } else {
-      setContacts(prevState => [...prevState, newContact]);
+      dispatch(addContact(newContact));
     }
     setName('');
     setNumber('');
   };
 
-  const handleFilter = () => {
-    const result = contacts.filter(contact =>
-      contact.name.toLowerCase().includes(filter.toLowerCase())
-    );
-    return result;
-  };
-
   const handleDelete = contactId => {
-    setContacts(contacts.filter(contact => contact.id !== contactId));
+    dispatch(deleteContact(contactId));
   };
 
   useEffect(() => {
     const savedContacts = localStorage.getItem('data');
     if (savedContacts) {
       const parsedContacts = JSON.parse(savedContacts);
-      setContacts(parsedContacts);
+      parsedContacts.forEach(contact => dispatch(addContact(contact)));
     }
+    setLoading(false);
+    // eslint-disable-next-line
   }, []);
 
   useEffect(() => {
     localStorage.setItem('data', JSON.stringify(contacts));
   }, [contacts]);
 
-  const results = handleFilter();
   return (
-    <div className={css.maindiv}>
-      <h1>Phonebook</h1>
-      <AddContacts
-        name={name}
-        number={number}
-        handleSubmit={handleSubmit}
-        handleChange={handleChange}
-      />
-      <Filter handleChange={handleChange} />
-      <ContactsList handleDelete={handleDelete} results={results} />
-    </div>
+    <>
+      <div className={css.maindiv}>
+        <h1>Phonebook</h1>
+        <AddContacts
+          name={name}
+          number={number}
+          handleSubmit={handleSubmit}
+          handleChange={handleChange}
+        />
+        <Filter handleChange={handleChange} />
+        <ContactsList handleDelete={handleDelete} loading={loading} />
+      </div>
+    </>
   );
 }

@@ -1,4 +1,5 @@
 import css from './Filter.module.css';
+import PropTypes from 'prop-types';
 
 export function Filter({ handleChange }) {
   return (
@@ -13,3 +14,7 @@ export function Filter({ handleChange }) {
     </>
   );
 }
+
+Filter.propTypes = {
+  handleChange: PropTypes.func.isRequired,
+};

@@ -7,6 +7,7 @@ import css from './App.module.css';
 import { useDispatch, useSelector } from 'react-redux';
 import { addContact, deleteContact } from '../redux/contactsSlice';
 import { filtering } from '../redux/filterSlice';
+import PropTypes from 'prop-types';
 
 export function App() {
   const dispatch = useDispatch();
@@ -82,3 +83,12 @@ export function App() {
     </>
   );
 }
+
+App.propTypes = {
+  name: PropTypes.string,
+  number: PropTypes.string,
+  loading: PropTypes.bool,
+  handleSubmit: PropTypes.func,
+  handleChange: PropTypes.func,
+  handleDelete: PropTypes.func,
+};

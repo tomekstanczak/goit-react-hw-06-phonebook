@@ -1,4 +1,5 @@
 import css from './AddContacts.module.css';
+import PropTypes from 'prop-types';
 
 export function AddContacts({ name, number, handleSubmit, handleChange }) {
   return (
@@ -31,3 +32,10 @@ export function AddContacts({ name, number, handleSubmit, handleChange }) {
     </form>
   );
 }
+
+AddContacts.propTypes = {
+  name: PropTypes.string.isRequired,
+  number: PropTypes.string.isRequired,
+  handleSubmit: PropTypes.func.isRequired,
+  handleChange: PropTypes.func.isRequired,
+};

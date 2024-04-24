@@ -1,6 +1,7 @@
 import React from 'react';
 import css from './ContactsList.module.css';
 import { useSelector } from 'react-redux';
+import PropTypes from 'prop-types';
 
 export function ContactsList({ handleDelete, loading }) {
   const contacts = useSelector(state => state.contacts);
@@ -40,3 +41,8 @@ export function ContactsList({ handleDelete, loading }) {
     </>
   );
 }
+
+ContactsList.propTypes = {
+  handleDelete: PropTypes.func.isRequired,
+  loading: PropTypes.bool.isRequired,
+};

@@ -27,9 +27,7 @@ export function AddContacts({ name, number, handleSubmit, handleChange }) {
           onChange={handleChange}
         />
       </label>
-      <button type="submit" onClick={handleSubmit}>
-        Add Contact
-      </button>
+      <button type="submit">Add Contact</button>
     </form>
   );
 }

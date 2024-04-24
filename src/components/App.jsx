@@ -5,15 +5,13 @@ import { AddContacts } from './AddContacts/AddContacts';
 import { Filter } from './Filter/Filter';
 import css from './App.module.css';
 import { useDispatch, useSelector } from 'react-redux';
-import { addContact, deleteContact, filtering } from '../redux/actions';
+import { addContact, deleteContact } from '../redux/contactsSlice';
+import { filtering } from '../redux/filterSlice';
 
 export function App() {
   const dispatch = useDispatch();
 
   const contacts = useSelector(state => state.contacts);
-  const filtered = useSelector(state => state.filtered);
-
-  console.log(filtered);
 
   const [name, setName] = useState('');
   const [number, setNumber] = useState('');
@@ -28,7 +26,6 @@ export function App() {
       setNumber(value);
     }
     if (name === 'filter') {
-      console.log('Filtering action is being dispatched with value:', value);
       dispatch(filtering(value));
     }
   };
@@ -41,7 +38,7 @@ export function App() {
       number,
     };
 
-    const existingContact = contacts.some(prev => prev.name.includes(name));
+    const existingContact = contacts.some(prev => prev.name === name);
     if (existingContact) {
       alert('Contact is already existing');
     } else {
